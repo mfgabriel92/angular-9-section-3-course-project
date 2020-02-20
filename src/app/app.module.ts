@@ -12,7 +12,8 @@ import { RecipeItemComponent } from './recipe/recipe-list/recipe-item/recipe-ite
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { ShoppingListEditComponent } from './shopping-list/shopping-list-edit/shopping-list-edit.component';
 import { ShoppingListService } from './shopping-list/shopping-list.service';
-import { EmptyComponent } from './recipes/empty/empty.component';
+import { EmptyComponent } from './recipe/empty/empty.component';
+import { RecipeEditComponent } from './recipe/recipe-edit/recipe-edit.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { EmptyComponent } from './recipes/empty/empty.component';
     RecipeItemComponent,
     ShoppingListComponent,
     ShoppingListEditComponent,
-    EmptyComponent
+    EmptyComponent,
+    RecipeEditComponent
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [ShoppingListService],
