@@ -37,7 +37,7 @@ export class RecipeService {
   }
 
   getRecipe(id: number): Recipe {
-    return this.recipes[id];
+    return this.recipes[id - 1];
   }
 
   addToShoppingList(ingredients: Ingredient[]): void {
