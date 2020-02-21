@@ -34,7 +34,7 @@
                 class="btn btn-primary"
                 [disabled]="!f.valid"
               >
-                Add
+                {{ isEditingIngredient ? 'Update' : 'Add' }}
               </button>
               <button type="button" class="btn btn-success">
                 Clear

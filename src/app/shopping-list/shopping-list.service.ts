@@ -3,7 +3,7 @@ import { Ingredient } from '../shared/ingredient.model';
 
 export class ShoppingListService {
   ingredients: Ingredient[] = [];
-  ingredientAdded = new Subject<Ingredient[]>();
+  ingredientChanged = new Subject<Ingredient[]>();
   ingredientEditing = new Subject<number>();
 
   getIngredients(): Ingredient[] {
@@ -14,13 +14,19 @@ export class ShoppingListService {
     return this.ingredients[index];
   }
 
+  updateIngredient(index: number, newIngredient: Ingredient): void {
+    console.log(newIngredient);
+    this.ingredients[index] = newIngredient;
+    this.ingredientChanged.next(this.ingredients.slice());
+  }
+
   addIngredient(ingredient: Ingredient): void {
     this.ingredients.push(ingredient);
-    this.ingredientAdded.next(this.ingredients.slice());
+    this.ingredientChanged.next(this.ingredients.slice());
   }
 
   addIngredients(ingredients: Ingredient[]): void {
     this.ingredients.push(...ingredients);
-    this.ingredientAdded.next(this.ingredients.slice());
+    this.ingredientChanged.next(this.ingredients.slice());
   }
 }
