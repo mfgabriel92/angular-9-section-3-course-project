@@ -71,7 +71,13 @@
                 />
               </div>
               <div class="col">
-                <button class="btn btn-danger btn-block">X</button>
+                <button
+                  type="button"
+                  class="btn btn-danger btn-block"
+                  (click)="onDeleteIngredientClick(i)"
+                >
+                  X
+                </button>
               </div>
             </div>
             <hr />

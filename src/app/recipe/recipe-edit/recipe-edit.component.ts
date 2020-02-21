@@ -73,6 +73,10 @@ export class RecipeEditComponent implements OnInit {
     this.recipeService.deleteRecipe(this.id);
   }
 
+  onDeleteIngredientClick(index: number) {
+    (this.recipeForm.get('ingredients') as FormArray).removeAt(index);
+  }
+
   private initForm(): void {
     let recipeName = '';
     let recipeImageUrl = '';
