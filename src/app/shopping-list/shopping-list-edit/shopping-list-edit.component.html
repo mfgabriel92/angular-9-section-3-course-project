@@ -36,7 +36,11 @@
               >
                 {{ isEditingIngredient ? 'Update' : 'Add' }}
               </button>
-              <button type="button" class="btn btn-success">
+              <button
+                type="button"
+                class="btn btn-success"
+                (click)="onResetClick()"
+              >
                 Clear
               </button>
             </div>

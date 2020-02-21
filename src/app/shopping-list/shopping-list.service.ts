@@ -15,7 +15,6 @@ export class ShoppingListService {
   }
 
   updateIngredient(index: number, newIngredient: Ingredient): void {
-    console.log(newIngredient);
     this.ingredients[index] = newIngredient;
     this.ingredientChanged.next(this.ingredients.slice());
   }
