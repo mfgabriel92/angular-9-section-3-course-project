@@ -49,12 +49,22 @@ export class RecipeService {
 
   addRecipe(recipe: Recipe): void {
     this.recipes.push(recipe);
-    this.recipesChanged.next(this.recipes.slice());
+    this.fetchRecipes();
   }
 
   updateRecipe(id: string, newRecipe: Recipe): void {
     const index = this.recipes.findIndex(e => e.id === id);
     this.recipes[index] = newRecipe;
+    this.fetchRecipes();
+  }
+
+  deleteRecipe(id: string): void {
+    const index = this.recipes.findIndex(e => e.id === id);
+    this.recipes.splice(index, 1);
+    this.fetchRecipes();
+  }
+
+  private fetchRecipes(): void {
     this.recipesChanged.next(this.recipes.slice());
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import uuid from 'uuid/v4';
 
 import {
@@ -23,6 +23,7 @@ export class RecipeEditComponent implements OnInit {
   recipeForm: FormGroup;
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private recipeService: RecipeService
   ) {}
@@ -60,6 +61,16 @@ export class RecipeEditComponent implements OnInit {
     } else {
       this.recipeService.addRecipe(recipe);
     }
+
+    this.clearAndLeave();
+  }
+
+  onCancelClick(): void {
+    this.clearAndLeave();
+  }
+
+  onDeleteClick(): void {
+    this.recipeService.deleteRecipe(this.id);
   }
 
   private initForm(): void {
@@ -95,5 +106,10 @@ export class RecipeEditComponent implements OnInit {
       description: new FormControl(recipeDescription, Validators.required),
       ingredients: recipeIngredients
     });
+  }
+
+  private clearAndLeave(): void {
+    this.recipeForm.reset();
+    this.router.navigate(['/recipes']);
   }
 }

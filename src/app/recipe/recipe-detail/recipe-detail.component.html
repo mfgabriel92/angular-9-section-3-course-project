@@ -36,7 +36,12 @@
           <a [routerLink]="['edit']" class="dropdown-item">Edit recipe</a>
         </li>
         <li>
-          <a href="#" class="dropdown-item">Delete recipe</a>
+          <a
+            class="dropdown-item"
+            (click)="onDeleteClick()"
+            style="cursor: pointer;"
+            >Delete recipe</a
+          >
         </li>
       </ul>
     </div>
