@@ -7,7 +7,7 @@
           class="btn btn-success"
           [disabled]="!recipeForm.valid"
         >
-          Update
+          {{ isEditing ? 'Update' : 'Create' }}
         </button>
         <button type="button" class="btn btn-danger">Cancel</button>
       </div>
