@@ -13,7 +13,7 @@
             ngModel
           />
         </div>
-        <div class="col-lg-1">
+        <div class="col-lg-2">
           <label for="amount">Amount</label>
           <input
             type="number"
@@ -21,6 +21,7 @@
             name="amount"
             class="form-control"
             required
+            [pattern]="'^[1-9]+[0-9]*$'"
             ngModel
           />
         </div>
