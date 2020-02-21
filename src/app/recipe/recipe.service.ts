@@ -55,7 +55,6 @@ export class RecipeService {
   updateRecipe(id: string, newRecipe: Recipe): void {
     const index = this.recipes.findIndex(e => e.id === id);
     this.recipes[index] = newRecipe;
-    console.log(newRecipe);
     this.recipesChanged.next(this.recipes.slice());
   }
 }
