@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import uuid from 'uuid/v4';
+
 import {
   FormGroup,
   FormControl,
@@ -8,6 +10,7 @@ import {
   Validators
 } from '@angular/forms';
 import { RecipeService } from '../recipe.service';
+import { Recipe } from '../recipe.model';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -15,7 +18,7 @@ import { RecipeService } from '../recipe.service';
   styleUrls: ['./recipe-edit.component.scss']
 })
 export class RecipeEditComponent implements OnInit {
-  id: number;
+  id: string;
   isEditing = false;
   recipeForm: FormGroup;
 
@@ -26,7 +29,7 @@ export class RecipeEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
-      this.id = +params.id;
+      this.id = params.id;
       this.isEditing = params.id != null;
       this.initForm();
     });
@@ -49,7 +52,14 @@ export class RecipeEditComponent implements OnInit {
   }
 
   onSubmitClick(): void {
-    console.log(this.recipeForm);
+    const { name, imageUrl, description, ingredients } = this.recipeForm.value;
+    const recipe = new Recipe(uuid(), name, description, imageUrl, ingredients);
+
+    if (this.isEditing) {
+      this.recipeService.updateRecipe(this.id, recipe);
+    } else {
+      this.recipeService.addRecipe(recipe);
+    }
   }
 
   private initForm(): void {
