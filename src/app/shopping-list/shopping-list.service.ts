@@ -14,18 +14,27 @@ export class ShoppingListService {
     return this.ingredients[index];
   }
 
-  updateIngredient(index: number, newIngredient: Ingredient): void {
-    this.ingredients[index] = newIngredient;
-    this.ingredientChanged.next(this.ingredients.slice());
-  }
-
   addIngredient(ingredient: Ingredient): void {
     this.ingredients.push(ingredient);
-    this.ingredientChanged.next(this.ingredients.slice());
+    this.fetchIngredients();
   }
 
   addIngredients(ingredients: Ingredient[]): void {
     this.ingredients.push(...ingredients);
-    this.ingredientChanged.next(this.ingredients.slice());
+    this.fetchIngredients();
+  }
+
+  updateIngredient(index: number, newIngredient: Ingredient): void {
+    this.ingredients[index] = newIngredient;
+    this.fetchIngredients();
+  }
+
+  deleteIngredient(index: number): void {
+    this.ingredients.splice(index, 1);
+    this.fetchIngredients();
+  }
+
+  private fetchIngredients(): void {
+    return this.ingredientChanged.next(this.ingredients.slice());
   }
 }

@@ -38,6 +38,14 @@
               </button>
               <button
                 type="button"
+                class="btn btn-danger"
+                (click)="onDeleteClick()"
+                [disabled]="!isEditingIngredient"
+              >
+                Delete
+              </button>
+              <button
+                type="button"
                 class="btn btn-success"
                 (click)="onResetClick()"
               >
