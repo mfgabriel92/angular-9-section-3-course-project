@@ -9,31 +9,14 @@ import { ShoppingListService } from '../shopping-list/shopping-list.service';
 @Injectable()
 export class RecipeService {
   recipesChanged = new Subject();
-  recipes: Recipe[] = [
-    new Recipe(
-      uuid(),
-      'Lorem I',
-      'Lorem ipsum I',
-      'https://cdn.pixabay.com/photo/2016/06/15/19/09/food-1459693_960_720.jpg',
-      [new Ingredient('Foo', 2)]
-    ),
-    new Recipe(
-      uuid(),
-      'Lorem II',
-      'Lorem ipsum II',
-      'https://cdn.pixabay.com/photo/2016/06/15/19/09/food-1459693_960_720.jpg',
-      [new Ingredient('Bar', 7)]
-    ),
-    new Recipe(
-      uuid(),
-      'Lorem III',
-      'Lorem ipsum III',
-      'https://cdn.pixabay.com/photo/2016/06/15/19/09/food-1459693_960_720.jpg',
-      [new Ingredient('Lorem', 4)]
-    )
-  ];
+  recipes: Recipe[] = [];
 
   constructor(private shoppingListService: ShoppingListService) {}
+
+  setRecipes(recipes: Recipe[]): void {
+    this.recipes = recipes;
+    this.fetchRecipes();
+  }
 
   getRecipes(): Recipe[] {
     return this.recipes.slice();

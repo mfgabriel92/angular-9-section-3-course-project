@@ -6,9 +6,12 @@
 <hr />
 <div class="row">
   <div class="col-lg-12">
-    <app-recipe-item
-      *ngFor="let recipe of recipes"
-      [recipe]="recipe"
-    ></app-recipe-item>
+    <p *ngIf="recipes.length === 0; else recipesList">No recipes yet</p>
+    <ng-template #recipesList>
+      <app-recipe-item
+        *ngFor="let recipe of recipes"
+        [recipe]="recipe"
+      ></app-recipe-item>
+    </ng-template>
   </div>
 </div>

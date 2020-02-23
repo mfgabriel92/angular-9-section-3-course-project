@@ -14,4 +14,8 @@ export class HeaderComponent implements OnInit {
   onSaveClick(): void {
     this.recipeApi.store().subscribe(response => console.log(response));
   }
+
+  onFetchClick(): void {
+    this.recipeApi.fetch();
+  }
 }
