@@ -16,6 +16,6 @@ export class HeaderComponent implements OnInit {
   }
 
   onFetchClick(): void {
-    this.recipeApi.fetch();
+    this.recipeApi.fetch().subscribe();
   }
 }
