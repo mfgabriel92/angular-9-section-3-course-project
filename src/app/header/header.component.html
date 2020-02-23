@@ -32,15 +32,16 @@
       </button>
       <ul class="dropdown-menu">
         <li>
-          <a class="dropdown-item" style="cursor: pointer;">
-            Add to shopping list
+          <a
+            class="dropdown-item"
+            style="cursor: pointer;"
+            (click)="onSaveClick()"
+          >
+            Save All
           </a>
         </li>
         <li>
-          <a [routerLink]="['edit']" class="dropdown-item">Edit recipe</a>
-        </li>
-        <li>
-          <a class="dropdown-item" style="cursor: pointer;">Delete recipe</a>
+          <a class="dropdown-item" style="cursor: pointer;">Fetch All</a>
         </li>
       </ul>
     </div>

@@ -1,3 +1,4 @@
+import { RecipeApiService } from './../recipe/recipe-api.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,7 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  constructor() { }
+  constructor(private recipeApi: RecipeApiService) {}
 
-  ngOnInit() { }
+  ngOnInit(): void {}
+
+  onSaveClick(): void {
+    this.recipeApi.store().subscribe(response => console.log(response));
+  }
 }
