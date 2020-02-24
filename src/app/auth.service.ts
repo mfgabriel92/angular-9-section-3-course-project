@@ -73,14 +73,28 @@ export class AuthService {
       );
   }
 
-  private setUser(response: AuthResponse): void {
-    this.user.next(
-      new User(
-        response.localId,
-        response.email,
-        response.idToken,
-        new Date(new Date().getTime() + +response.expiresIn * 1000)
-      )
+  autoLogin(): void {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    const user = new User(
+      storedUser.id,
+      storedUser.email,
+      storedUser.token,
+      new Date(storedUser.expiresIn)
     );
+
+    if (user.userToken) {
+      this.user.next(user);
+    }
+  }
+
+  private setUser(response: AuthResponse): void {
+    const user = new User(
+      response.localId,
+      response.email,
+      response.idToken,
+      new Date(new Date().getTime() + +response.expiresIn * 1000)
+    );
+    this.user.next(user);
+    localStorage.setItem('user', JSON.stringify(user));
   }
 }
