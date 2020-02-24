@@ -19,6 +19,7 @@ import { RecipeService } from './recipe/recipe.service';
 import { SignupComponent } from './signup/signup.component';
 import { SigninComponent } from './signin/signin.component';
 import { AuthService } from './auth.service';
+import { LoadingComponent } from './shared/loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { AuthService } from './auth.service';
     EmptyComponent,
     RecipeEditComponent,
     SignupComponent,
-    SigninComponent
+    SigninComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,

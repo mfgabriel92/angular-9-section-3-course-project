@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+
 import { NgForm } from '@angular/forms';
 import { AuthService } from '../auth.service';
 
@@ -9,6 +10,8 @@ import { AuthService } from '../auth.service';
 })
 export class SignupComponent implements OnInit {
   @ViewChild('form') signupForm: NgForm;
+  isLoading = false;
+  error: string;
 
   constructor(private authService: AuthService) {}
 
@@ -21,9 +24,13 @@ export class SignupComponent implements OnInit {
 
     const { email, password } = this.signupForm.value;
 
+    this.isLoading = true;
     this.authService.signup(email, password).subscribe(
-      response => console.log(response),
-      error => console.log(error)
+      () => (this.isLoading = false),
+      ({ error }) => {
+        this.error = error.error.message;
+        this.isLoading = false;
+      }
     );
 
     this.signupForm.reset();

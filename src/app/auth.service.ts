@@ -20,7 +20,6 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   signup(email: string, password: string): Observable<AuthResponse> {
-    console.log(email, password);
     return this.http.post<AuthResponse>(this.BASE_URL, {
       email,
       password,

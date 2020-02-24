@@ -1,5 +1,6 @@
-<div class="row mt-5">
+<div class="row mt-5 position-relative">
   <div class="col-6 m-auto col-md-8 col-sm-12">
+    <app-loading *ngIf="isLoading"></app-loading>
     <form #form="ngForm" (ngSubmit)="onSubmitClick()">
       <div class="form-group">
         <label for="email">E-mail *</label>
@@ -36,5 +37,8 @@
         </a>
       </div>
     </form>
+    <div class="alert alert-danger" *ngIf="error">
+      {{ error }}
+    </div>
   </div>
 </div>
