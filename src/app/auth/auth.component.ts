@@ -6,7 +6,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
+  isSignUp = false;
+
   constructor() {}
 
   ngOnInit(): void {}
+
+  onSwitchModeClick() {
+    this.isSignUp = !this.isSignUp;
+  }
 }
