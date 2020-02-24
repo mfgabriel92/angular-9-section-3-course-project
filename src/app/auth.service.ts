@@ -4,6 +4,7 @@ import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 import { User } from './user.model';
+import { Router } from '@angular/router';
 
 interface AuthResponse {
   kind: string;
@@ -20,8 +21,9 @@ interface AuthResponse {
 })
 export class AuthService {
   user = new BehaviorSubject<User>(null);
+  private expirationTimer: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   signup(email: string, password: string): Observable<AuthResponse> {
     return this.http
@@ -75,6 +77,11 @@ export class AuthService {
 
   autoLogin(): void {
     const storedUser = JSON.parse(localStorage.getItem('user'));
+
+    if (!storedUser) {
+      return;
+    }
+
     const user = new User(
       storedUser.id,
       storedUser.email,
@@ -84,7 +91,28 @@ export class AuthService {
 
     if (user.userToken) {
       this.user.next(user);
+      const expiresIn =
+        new Date(storedUser.expiresIn).getTime() - new Date().getTime();
+
+      this.autoLogout(expiresIn);
+    } else {
+      localStorage.removeItem('user');
+      this.router.navigate(['/signin']);
     }
+  }
+
+  logout(): void {
+    this.user.next(null);
+    this.router.navigate(['/signin']);
+    localStorage.removeItem('user');
+
+    if (this.expirationTimer) {
+      clearTimeout(this.expirationTimer);
+    }
+  }
+
+  autoLogout(duration: number): void {
+    this.expirationTimer = setTimeout(() => this.logout(), duration);
   }
 
   private setUser(response: AuthResponse): void {
