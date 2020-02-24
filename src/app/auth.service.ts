@@ -15,11 +15,12 @@ interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private BASE_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=AIzaSyDCAB6AM-jgucCt6VjPBnWLnv13KxXUY98`;
+  private BASE_URL = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDCAB6AM-jgucCt6VjPBnWLnv13KxXUY98`;
 
   constructor(private http: HttpClient) {}
 
-  onSignUpClick(email: string, password: string): Observable<AuthResponse> {
+  signup(email: string, password: string): Observable<AuthResponse> {
+    console.log(email, password);
     return this.http.post<AuthResponse>(this.BASE_URL, {
       email,
       password,
