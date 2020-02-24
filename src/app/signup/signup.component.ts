@@ -25,6 +25,7 @@ export class SignupComponent implements OnInit {
     const { email, password } = this.signupForm.value;
 
     this.isLoading = true;
+    this.error = null;
     this.authService.signup(email, password).subscribe(
       () => (this.isLoading = false),
       error => {
@@ -32,7 +33,6 @@ export class SignupComponent implements OnInit {
         this.isLoading = false;
       }
     );
-
     this.signupForm.reset();
   }
 }
