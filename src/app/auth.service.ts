@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable, throwError, Subject } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+
+import { User } from './user.model';
 
 interface AuthResponse {
   kind: string;
@@ -17,6 +19,8 @@ interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthService {
+  user = new Subject<User>();
+
   constructor(private http: HttpClient) {}
 
   signup(email: string, password: string): Observable<AuthResponse> {
@@ -39,7 +43,8 @@ export class AuthService {
             default:
               return throwError('An unknown error occurred');
           }
-        })
+        }),
+        tap(response => this.setUser(response))
       );
   }
 
@@ -63,7 +68,19 @@ export class AuthService {
             default:
               return throwError('An unknown error occurred');
           }
-        })
+        }),
+        tap(response => this.setUser(response))
       );
+  }
+
+  private setUser(response: AuthResponse): void {
+    this.user.next(
+      new User(
+        response.localId,
+        response.email,
+        response.idToken,
+        new Date(new Date().getTime() + +response.expiresIn * 1000)
+      )
+    );
   }
 }

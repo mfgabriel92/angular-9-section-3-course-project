@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
+
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -12,7 +14,7 @@ export class SigninComponent implements OnInit {
   isLoading = false;
   error: string;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {}
 
@@ -26,7 +28,10 @@ export class SigninComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
     this.authService.login(email, password).subscribe(
-      () => (this.isLoading = false),
+      () => {
+        this.router.navigate(['/recipes']);
+        this.isLoading = false;
+      },
       error => {
         this.error = error;
         this.isLoading = false;
