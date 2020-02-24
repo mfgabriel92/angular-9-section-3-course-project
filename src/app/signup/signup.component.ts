@@ -27,8 +27,8 @@ export class SignupComponent implements OnInit {
     this.isLoading = true;
     this.authService.signup(email, password).subscribe(
       () => (this.isLoading = false),
-      ({ error }) => {
-        this.error = error.error.message;
+      error => {
+        this.error = error;
         this.isLoading = false;
       }
     );
