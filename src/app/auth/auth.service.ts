@@ -16,9 +16,7 @@ interface AuthResponse {
   registered?: boolean;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   user = new BehaviorSubject<User>(null);
   private expirationTimer: any;
