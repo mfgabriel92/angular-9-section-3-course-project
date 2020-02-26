@@ -9,13 +9,13 @@ import {
   AbstractControl,
   Validators
 } from '@angular/forms';
-import { RecipeService } from '../recipe.service';
+import { RecipeService } from '../recipes.service';
 import { Recipe } from '../recipe.model';
 
 @Component({
-  selector: 'app-recipe-edit',
-  templateUrl: './recipe-edit.component.html',
-  styleUrls: ['./recipe-edit.component.scss']
+  selector: 'app-recipes-edit',
+  templateUrl: './recipes-edit.component.html',
+  styleUrls: ['./recipes-edit.component.scss']
 })
 export class RecipeEditComponent implements OnInit {
   id: string;
@@ -54,12 +54,18 @@ export class RecipeEditComponent implements OnInit {
 
   onSubmitClick(): void {
     const { name, imageUrl, description, ingredients } = this.recipeForm.value;
-    const recipe = new Recipe(uuid(), name, description, imageUrl, ingredients);
+    const recipes = new Recipe(
+      uuid(),
+      name,
+      description,
+      imageUrl,
+      ingredients
+    );
 
     if (this.isEditing) {
-      this.recipeService.updateRecipe(this.id, recipe);
+      this.recipeService.updateRecipe(this.id, recipes);
     } else {
-      this.recipeService.addRecipe(recipe);
+      this.recipeService.addRecipe(recipes);
     }
 
     this.clearAndLeave();
@@ -84,13 +90,13 @@ export class RecipeEditComponent implements OnInit {
     const recipeIngredients = new FormArray([]);
 
     if (this.isEditing) {
-      const recipe = this.recipeService.getRecipe(this.id);
-      recipeName = recipe.name;
-      recipeImageUrl = recipe.imageUrl;
-      recipeDescription = recipe.description;
+      const recipes = this.recipeService.getRecipe(this.id);
+      recipeName = recipes.name;
+      recipeImageUrl = recipes.imageUrl;
+      recipeDescription = recipes.description;
 
-      if (recipe.ingredients) {
-        for (const ingredient of recipe.ingredients) {
+      if (recipes.ingredients) {
+        for (const ingredient of recipes.ingredients) {
           recipeIngredients.push(
             new FormGroup({
               name: new FormControl(ingredient.name, Validators.required),

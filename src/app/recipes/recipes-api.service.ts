@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { map, tap } from 'rxjs/operators';
 import { Recipe } from './recipe.model';
-import { RecipeService } from './recipe.service';
+import { RecipeService } from './recipes.service';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeApiService {
@@ -15,8 +15,8 @@ export class RecipeApiService {
       .get<Recipe[]>('https://ng-9-recipe-book.firebaseio.com/recipes.json')
       .pipe(
         map(recipes => {
-          return recipes.map(recipe => {
-            return { ...recipe, ingredients: recipe.ingredients ?? [] };
+          return recipes.map(recipes => {
+            return { ...recipes, ingredients: recipes.ingredients ?? [] };
           });
         }),
         tap(recipes => this.recipeService.setRecipes(recipes))

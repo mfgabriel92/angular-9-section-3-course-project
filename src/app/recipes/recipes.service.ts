@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import uuid from 'uuid/v4';
 
 import { Recipe } from './recipe.model';
 import { Ingredient } from '../shared/ingredient.model';
@@ -30,8 +29,8 @@ export class RecipeService {
     this.shoppingListService.addIngredients(ingredients);
   }
 
-  addRecipe(recipe: Recipe): void {
-    this.recipes.push(recipe);
+  addRecipe(recipes: Recipe): void {
+    this.recipes.push(recipes);
     this.fetchRecipes();
   }
 

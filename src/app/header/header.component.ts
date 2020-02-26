@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { RecipeApiService } from './../recipe/recipe-api.service';
+import { RecipeApiService } from './../recipes/recipes-api.service';
 import { AuthService } from '../auth.service';
 import { Subscription } from 'rxjs';
 

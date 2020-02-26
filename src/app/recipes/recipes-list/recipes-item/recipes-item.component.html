@@ -1,15 +1,15 @@
 <a
-  [routerLink]="[recipe.id]"
+  [routerLink]="[recipes.id]"
   [routerLinkActive]="['active']"
   class="list-group-item clearfix"
 >
   <div class="float-left">
-    <h5 class="list-group-item-heading">{{ recipe.name }}</h5>
-    <span class="list-group-item-text">{{ recipe.description }}</span>
+    <h5 class="list-group-item-heading">{{ recipes.name }}</h5>
+    <span class="list-group-item-text">{{ recipes.description }}</span>
   </div>
   <div class="float-right">
     <img
-      src="{{ recipe.imageUrl }}"
+      src="{{ recipes.imageUrl }}"
       alt=""
       class="img-responsive"
       style="width: 100px;"

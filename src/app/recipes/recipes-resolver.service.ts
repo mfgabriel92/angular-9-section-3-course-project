@@ -5,9 +5,9 @@ import {
   Resolve
 } from '@angular/router';
 
-import { RecipeApiService } from './recipe-api.service';
+import { RecipeApiService } from './recipes-api.service';
 import { Recipe } from './recipe.model';
-import { RecipeService } from './recipe.service';
+import { RecipeService } from './recipes.service';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeResolverService implements Resolve<Recipe[]> {
