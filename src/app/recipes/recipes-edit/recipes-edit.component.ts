@@ -17,7 +17,7 @@ import { Recipe } from '../recipe.model';
   templateUrl: './recipes-edit.component.html',
   styleUrls: ['./recipes-edit.component.scss']
 })
-export class RecipeEditComponent implements OnInit {
+export class RecipesEditComponent implements OnInit {
   id: string;
   isEditing = false;
   recipeForm: FormGroup;

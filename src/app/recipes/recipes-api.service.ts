@@ -7,7 +7,7 @@ import { Recipe } from './recipe.model';
 import { RecipeService } from './recipes.service';
 
 @Injectable({ providedIn: 'root' })
-export class RecipeApiService {
+export class RecipesApiService {
   constructor(private http: HttpClient, private recipeService: RecipeService) {}
 
   fetch(): Observable<Recipe[]> {

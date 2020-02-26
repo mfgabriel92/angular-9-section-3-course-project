@@ -5,14 +5,14 @@ import {
   Resolve
 } from '@angular/router';
 
-import { RecipeApiService } from './recipes-api.service';
+import { RecipesApiService } from './recipes-api.service';
 import { Recipe } from './recipe.model';
 import { RecipeService } from './recipes.service';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeResolverService implements Resolve<Recipe[]> {
   constructor(
-    private recipeApi: RecipeApiService,
+    private recipeApi: RecipesApiService,
     private recipeService: RecipeService
   ) {}
 

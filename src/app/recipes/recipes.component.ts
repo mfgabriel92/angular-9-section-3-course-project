@@ -5,6 +5,6 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './recipes.component.html',
   styleUrls: ['./recipes.component.css']
 })
-export class RecipeComponent implements OnInit {
+export class RecipesComponent implements OnInit {
   ngOnInit(): void {}
 }

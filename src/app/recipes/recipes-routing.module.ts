@@ -2,28 +2,28 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuardService } from '../auth/auth-guard.service';
-import { RecipeComponent } from './recipes.component';
+import { RecipesComponent } from './recipes.component';
 import { EmptyComponent } from './empty/empty.component';
-import { RecipeEditComponent } from './recipes-edit/recipes-edit.component';
-import { RecipeDetailComponent } from './recipes-detail/recipes-detail.component';
+import { RecipesEditComponent } from './recipes-edit/recipes-edit.component';
+import { RecipesDetailComponent } from './recipes-detail/recipes-detail.component';
 import { RecipeResolverService } from './recipes-resolver.service';
 
 const routes: Routes = [
   {
     path: '',
-    component: RecipeComponent,
+    component: RecipesComponent,
     canActivate: [AuthGuardService],
     children: [
       { path: '', component: EmptyComponent },
-      { path: 'new', component: RecipeEditComponent },
+      { path: 'new', component: RecipesEditComponent },
       {
         path: ':id',
-        component: RecipeDetailComponent,
+        component: RecipesDetailComponent,
         resolve: [RecipeResolverService]
       },
       {
         path: ':id/edit',
-        component: RecipeEditComponent,
+        component: RecipesEditComponent,
         resolve: [RecipeResolverService]
       }
     ]
