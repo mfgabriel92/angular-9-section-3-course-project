@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 import { User } from './user.model';
-import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 interface AuthResponse {
   kind: string;
@@ -26,7 +27,7 @@ export class AuthService {
   signup(email: string, password: string): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDCAB6AM-jgucCt6VjPBnWLnv13KxXUY98',
+        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.APIkey}`,
         {
           email,
           password,
@@ -51,7 +52,7 @@ export class AuthService {
   login(email: string, password: string): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDCAB6AM-jgucCt6VjPBnWLnv13KxXUY98',
+        `'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.APIkey}`,
         {
           email,
           password,

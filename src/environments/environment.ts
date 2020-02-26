@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  APIkey: 'AIzaSyDCAB6AM-jgucCt6VjPBnWLnv13KxXUY98',
+  baseUrl: 'https://ng-9-recipe-book.firebaseio.com'
 };
 
 /*

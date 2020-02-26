@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { Recipe } from './recipe.model';
 import { RecipeService } from './recipes.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class RecipesApiService {
@@ -12,7 +13,7 @@ export class RecipesApiService {
 
   fetch(): Observable<Recipe[]> {
     return this.http
-      .get<Recipe[]>('https://ng-9-recipe-book.firebaseio.com/recipes.json')
+      .get<Recipe[]>(`${environment.baseUrl}'/recipes.json'`)
       .pipe(
         map(recipes => {
           return recipes.map(recipes => {
@@ -26,9 +27,6 @@ export class RecipesApiService {
   store(): Observable<object> {
     const recipes = this.recipeService.getRecipes();
 
-    return this.http.put(
-      'https://ng-9-recipe-book.firebaseio.com/recipes.json',
-      recipes
-    );
+    return this.http.put(`${environment.baseUrl}'/recipes.json'`, recipes);
   }
 }
