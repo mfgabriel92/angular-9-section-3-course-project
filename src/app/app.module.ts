@@ -16,15 +16,15 @@ import { ShoppingListRoutingModule } from './shopping-list/shopping-list-routing
   declarations: [AppComponent, HeaderComponent],
   imports: [
     BrowserModule,
+    AppRoutingModule,
     CoreModule,
     SharedModule,
-    AppRoutingModule,
     HttpClientModule,
 
     AuthModule,
     AuthRoutingModule,
-    RecipesRoutingModule,
-    ShoppingListRoutingModule
+    ShoppingListRoutingModule,
+    RecipesRoutingModule
   ],
   bootstrap: [AppComponent]
 })
