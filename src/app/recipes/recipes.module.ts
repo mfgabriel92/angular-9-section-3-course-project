@@ -6,6 +6,7 @@ import { RecipesDetailComponent } from './recipes-detail/recipes-detail.componen
 import { RecipesListComponent } from './recipes-list/recipes-list.component';
 import { RecipeItemComponent } from './recipes-list/recipes-item/recipes-item.component';
 import { RecipesEditComponent } from './recipes-edit/recipes-edit.component';
+import { RecipesRoutingModule } from './recipes-routing.module';
 import { EmptyComponent } from './empty/empty.component';
 import { SharedModule } from '../shared/shared.module';
 
@@ -18,6 +19,6 @@ import { SharedModule } from '../shared/shared.module';
     RecipesEditComponent,
     EmptyComponent
   ],
-  imports: [SharedModule, ReactiveFormsModule]
+  imports: [RecipesRoutingModule, SharedModule, ReactiveFormsModule]
 })
 export class RecipesModule {}
