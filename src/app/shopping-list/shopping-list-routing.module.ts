@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ShoppingListComponent } from './shopping-list.component';
-import { AuthGuardService } from '../auth-guard.service';
+import { AuthGuardService } from '../auth/auth-guard.service';
 
 const routes: Routes = [
   {

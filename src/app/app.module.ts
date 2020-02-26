@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -8,14 +7,10 @@ import { AppComponent } from './app.component';
 
 import { HeaderComponent } from './header/header.component';
 
-import { SignupComponent } from './signup/signup.component';
-import { SigninComponent } from './signin/signin.component';
-
-import { AuthService } from './auth.service';
-import { AuthInterceptorService } from './auth-interceptor.service';
-
-import { LoadingComponent } from './shared/loading/loading.component';
-import { AlertComponent } from './shared/alert/alert.component';
+import { AuthRoutingModule } from './auth/auth-routing.module';
+import { AuthModule } from './auth/auth.module';
+import { AuthService } from './auth/auth.service';
+import { AuthInterceptorService } from './auth/auth-interceptor.service';
 
 import { RecipesModule } from './recipes/recipes.module';
 import { RecipeService } from './recipes/recipes.service';
@@ -24,22 +19,18 @@ import { RecipesRoutingModule } from './recipes/recipes-routing.module';
 import { ShoppingListModule } from './shopping-list/shopping-list.module';
 import { ShoppingListService } from './shopping-list/shopping-list.service';
 import { ShoppingListRoutingModule } from './shopping-list/shopping-list-routing.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HeaderComponent,
-    SignupComponent,
-    SigninComponent,
-    LoadingComponent,
-    AlertComponent
-  ],
+  declarations: [AppComponent, HeaderComponent],
   imports: [
-    BrowserModule,
+    SharedModule,
+
     AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
     HttpClientModule,
+
+    AuthModule,
+    AuthRoutingModule,
 
     RecipesModule,
     RecipesRoutingModule,
