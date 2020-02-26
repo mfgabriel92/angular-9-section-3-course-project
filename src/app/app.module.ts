@@ -21,6 +21,7 @@ import { SigninComponent } from './signin/signin.component';
 import { AuthService } from './auth.service';
 import { LoadingComponent } from './shared/loading/loading.component';
 import { AuthInterceptorService } from './auth-interceptor.service';
+import { AlertComponent } from './shared/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { AuthInterceptorService } from './auth-interceptor.service';
     RecipeEditComponent,
     SignupComponent,
     SigninComponent,
-    LoadingComponent
+    LoadingComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,
