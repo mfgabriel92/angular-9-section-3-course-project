@@ -4,10 +4,17 @@ import { RouterModule } from '@angular/router';
 
 import { AlertComponent } from './alert/alert.component';
 import { LoadingComponent } from './loading/loading.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AlertComponent, LoadingComponent],
-  imports: [RouterModule, CommonModule],
-  exports: [AlertComponent, LoadingComponent, RouterModule, CommonModule]
+  imports: [RouterModule, CommonModule, FormsModule],
+  exports: [
+    AlertComponent,
+    LoadingComponent,
+    RouterModule,
+    CommonModule,
+    FormsModule
+  ]
 })
 export class SharedModule {}
