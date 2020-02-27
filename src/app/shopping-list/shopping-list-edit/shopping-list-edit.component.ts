@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 import { Store } from '@ngrx/store';
 
 import { Ingredient } from 'src/app/shared/ingredient.model';
-import { ShoppingListService } from '../shopping-list.service';
+// import { ShoppingListService } from '../shopping-list.service';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 import * as ShoppingListActions from '../store/shopping-list.actions';
@@ -16,29 +16,26 @@ import * as fromShoppingList from '../store/shopping-list.reducer';
 })
 export class ShoppingListEditComponent implements OnInit, OnDestroy {
   @ViewChild('f') ingredientForm: NgForm;
-  subscription: Subscription;
   isEditingIngredient = false;
   editingIngredientIndex: number;
   editingIngredientItem: Ingredient;
 
-  constructor(
-    private shoppingListService: ShoppingListService,
-    private store: Store<fromShoppingList.AppState>
-  ) {}
+  constructor(private store: Store<fromShoppingList.AppState>) {}
 
   ngOnInit(): void {
-    this.subscription = this.shoppingListService.ingredientEditing.subscribe(
-      (i: number) => {
-        this.editingIngredientIndex = i;
-        this.isEditingIngredient = true;
-        this.editingIngredientItem = this.shoppingListService.getIngredient(i);
-        this.ingredientForm.form.setValue(this.editingIngredientItem);
+    this.store.select('shoppingList').subscribe(state => {
+      if (state.editingIngredientIndex === -1) {
+        this.isEditingIngredient = false;
+        return;
       }
-    );
+
+      this.isEditingIngredient = true;
+      this.ingredientForm.form.setValue(state.editingIngredient);
+    });
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.store.dispatch(new ShoppingListActions.StopEditing());
   }
 
   onSubmitClick(): void {
@@ -69,5 +66,6 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   onResetClick(): void {
     this.ingredientForm.form.reset();
     this.isEditingIngredient = false;
+    this.store.dispatch(new ShoppingListActions.StopEditing());
   }
 }
