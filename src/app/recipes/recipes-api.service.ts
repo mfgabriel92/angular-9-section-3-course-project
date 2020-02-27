@@ -12,21 +12,19 @@ export class RecipesApiService {
   constructor(private http: HttpClient, private recipeService: RecipeService) {}
 
   fetch(): Observable<Recipe[]> {
-    return this.http
-      .get<Recipe[]>(`${environment.baseUrl}'/recipes.json'`)
-      .pipe(
-        map(recipes => {
-          return recipes.map(recipes => {
-            return { ...recipes, ingredients: recipes.ingredients ?? [] };
-          });
-        }),
-        tap(recipes => this.recipeService.setRecipes(recipes))
-      );
+    return this.http.get<Recipe[]>(`${environment.baseUrl}/recipes.json`).pipe(
+      map(recipes => {
+        return recipes.map(recipes => {
+          return { ...recipes, ingredients: recipes.ingredients ?? [] };
+        });
+      }),
+      tap(recipes => this.recipeService.setRecipes(recipes))
+    );
   }
 
   store(): Observable<object> {
     const recipes = this.recipeService.getRecipes();
 
-    return this.http.put(`${environment.baseUrl}'/recipes.json'`, recipes);
+    return this.http.put(`${environment.baseUrl}/recipes.json`, recipes);
   }
 }
