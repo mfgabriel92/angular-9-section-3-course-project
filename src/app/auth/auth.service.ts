@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 import { User } from './user.model';
 import { environment } from '../../environments/environment';
+
+import * as fromApp from '../store/app.reducer';
+import * as AuthActions from './store/auth.actions';
 
 interface AuthResponse {
   kind: string;
@@ -22,7 +26,11 @@ export class AuthService {
   user = new BehaviorSubject<User>(null);
   private expirationTimer: any;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private store: Store<fromApp.AppState>
+  ) {}
 
   signup(email: string, password: string): Observable<AuthResponse> {
     return this.http
@@ -89,7 +97,14 @@ export class AuthService {
     );
 
     if (user.userToken) {
-      this.user.next(user);
+      this.store.dispatch(
+        new AuthActions.Login({
+          id: storedUser.id,
+          email: storedUser.email,
+          token: storedUser.token,
+          expiresIn: new Date(storedUser.expiresIn)
+        })
+      );
       const expiresIn =
         new Date(storedUser.expiresIn).getTime() - new Date().getTime();
 
@@ -101,7 +116,7 @@ export class AuthService {
   }
 
   logout(): void {
-    this.user.next(null);
+    this.store.dispatch(new AuthActions.Logout());
     this.router.navigate(['/signin']);
     localStorage.removeItem('user');
 
@@ -121,7 +136,15 @@ export class AuthService {
       response.idToken,
       new Date(new Date().getTime() + +response.expiresIn * 1000)
     );
-    this.user.next(user);
+
+    this.store.dispatch(
+      new AuthActions.Login({
+        id: null,
+        email: response.email,
+        token: response.idToken,
+        expiresIn: new Date(new Date().getTime() + +response.expiresIn * 1000)
+      })
+    );
     localStorage.setItem('user', JSON.stringify(user));
   }
 }
