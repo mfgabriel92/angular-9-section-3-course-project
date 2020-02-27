@@ -5,16 +5,15 @@ import { Subject } from 'rxjs';
 import { Recipe } from './recipe.model';
 import { Ingredient } from '../shared/ingredient.model';
 
-import { AddIngredients } from '../shopping-list/store/shopping-list.actions';
+import * as ShoppingListActions from '../shopping-list/store/shopping-list.actions';
+import * as fromShoppingList from '../shopping-list/store/shopping-list.reducer';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeService {
   recipesChanged = new Subject();
   recipes: Recipe[] = [];
 
-  constructor(
-    public store: Store<{ shoppingList: { ingredients: Ingredient[] } }>
-  ) {}
+  constructor(public store: Store<fromShoppingList.AppState>) {}
 
   setRecipes(recipes: Recipe[]): void {
     this.recipes = recipes;
@@ -30,7 +29,7 @@ export class RecipeService {
   }
 
   addToShoppingList(ingredients: Ingredient[]): void {
-    this.store.dispatch(new AddIngredients(ingredients));
+    this.store.dispatch(new ShoppingListActions.AddIngredients(ingredients));
   }
 
   addRecipe(recipes: Recipe): void {

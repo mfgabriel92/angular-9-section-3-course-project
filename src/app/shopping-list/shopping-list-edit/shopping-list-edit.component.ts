@@ -6,11 +6,8 @@ import { Ingredient } from 'src/app/shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list.service';
 import { Subscription } from 'rxjs/internal/Subscription';
 
-import {
-  AddIngredient,
-  UpdateIngredient,
-  DeleteIngredient
-} from '../store/shopping-list.actions';
+import * as ShoppingListActions from '../store/shopping-list.actions';
+import * as fromShoppingList from '../store/shopping-list.reducer';
 
 @Component({
   selector: 'app-shopping-list-edit',
@@ -26,7 +23,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
 
   constructor(
     private shoppingListService: ShoppingListService,
-    private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>
+    private store: Store<fromShoppingList.AppState>
   ) {}
 
   ngOnInit(): void {
@@ -50,20 +47,22 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
 
     if (this.isEditingIngredient) {
       this.store.dispatch(
-        new UpdateIngredient({
+        new ShoppingListActions.UpdateIngredient({
           index: this.editingIngredientIndex,
           ingredient
         })
       );
     } else {
-      this.store.dispatch(new AddIngredient(ingredient));
+      this.store.dispatch(new ShoppingListActions.AddIngredient(ingredient));
     }
 
     this.onResetClick();
   }
 
   onDeleteClick(): void {
-    this.store.dispatch(new DeleteIngredient(this.editingIngredientIndex));
+    this.store.dispatch(
+      new ShoppingListActions.DeleteIngredient(this.editingIngredientIndex)
+    );
     this.onResetClick();
   }
 
