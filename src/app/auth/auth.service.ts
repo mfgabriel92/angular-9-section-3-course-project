@@ -52,7 +52,7 @@ export class AuthService {
   login(email: string, password: string): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(
-        `'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.APIkey}`,
+        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.APIkey}`,
         {
           email,
           password,

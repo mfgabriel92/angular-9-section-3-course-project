@@ -14,7 +14,7 @@ import { AuthModule } from './auth/auth.module';
 import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer';
 
 const reducers = {
-  shoppintList: shoppingListReducer
+  shoppingList: shoppingListReducer
 };
 
 @NgModule({
