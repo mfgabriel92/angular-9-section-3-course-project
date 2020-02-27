@@ -11,11 +11,7 @@ import { HeaderComponent } from './header/header.component';
 import { AuthRoutingModule } from './auth/auth-routing.module';
 import { AuthModule } from './auth/auth.module';
 
-import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer';
-
-const reducers = {
-  shoppingList: shoppingListReducer
-};
+import * as fromApp from './store/app.reducer';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
@@ -25,8 +21,7 @@ const reducers = {
     CoreModule,
     SharedModule,
     HttpClientModule,
-    StoreModule.forRoot(reducers),
-
+    StoreModule.forRoot(fromApp.appReducer),
     AuthModule,
     AuthRoutingModule
   ],

@@ -5,15 +5,15 @@ import { Subject } from 'rxjs';
 import { Recipe } from './recipe.model';
 import { Ingredient } from '../shared/ingredient.model';
 
+import * as fromApp from '../store/app.reducer';
 import * as ShoppingListActions from '../shopping-list/store/shopping-list.actions';
-import * as fromShoppingList from '../shopping-list/store/shopping-list.reducer';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeService {
   recipesChanged = new Subject();
   recipes: Recipe[] = [];
 
-  constructor(public store: Store<fromShoppingList.AppState>) {}
+  constructor(public store: Store<fromApp.AppState>) {}
 
   setRecipes(recipes: Recipe[]): void {
     this.recipes = recipes;
