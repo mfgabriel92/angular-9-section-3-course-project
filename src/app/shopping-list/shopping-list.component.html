@@ -8,9 +8,9 @@
         style="cursor: pointer;"
         *ngFor="
           let ingredient of (ingredients | async).ingredients;
-          let id = index
+          let i = index
         "
-        (click)="onItemClick(id)"
+        (click)="onItemClick(i)"
       >
         {{ ingredient.name }} ({{ ingredient.amount }})
       </a>

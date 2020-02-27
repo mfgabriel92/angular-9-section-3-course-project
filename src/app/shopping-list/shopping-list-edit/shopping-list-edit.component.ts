@@ -6,7 +6,11 @@ import { Ingredient } from 'src/app/shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list.service';
 import { Subscription } from 'rxjs/internal/Subscription';
 
-import { AddIngredient } from '../store/shopping-list.actions';
+import {
+  AddIngredient,
+  UpdateIngredient,
+  DeleteIngredient
+} from '../store/shopping-list.actions';
 
 @Component({
   selector: 'app-shopping-list-edit',
@@ -15,8 +19,8 @@ import { AddIngredient } from '../store/shopping-list.actions';
 })
 export class ShoppingListEditComponent implements OnInit, OnDestroy {
   @ViewChild('f') ingredientForm: NgForm;
+  subscription: Subscription;
   isEditingIngredient = false;
-  editingIngredient: Subscription;
   editingIngredientIndex: number;
   editingIngredientItem: Ingredient;
 
@@ -26,7 +30,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.editingIngredient = this.shoppingListService.ingredientEditing.subscribe(
+    this.subscription = this.shoppingListService.ingredientEditing.subscribe(
       (i: number) => {
         this.editingIngredientIndex = i;
         this.isEditingIngredient = true;
@@ -37,7 +41,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.editingIngredient.unsubscribe();
+    this.subscription.unsubscribe();
   }
 
   onSubmitClick(): void {
@@ -45,9 +49,11 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
     const ingredient = new Ingredient(name, amount);
 
     if (this.isEditingIngredient) {
-      this.shoppingListService.updateIngredient(
-        this.editingIngredientIndex,
-        ingredient
+      this.store.dispatch(
+        new UpdateIngredient({
+          index: this.editingIngredientIndex,
+          ingredient
+        })
       );
     } else {
       this.store.dispatch(new AddIngredient(ingredient));
@@ -57,7 +63,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   }
 
   onDeleteClick(): void {
-    this.shoppingListService.deleteIngredient(this.editingIngredientIndex);
+    this.store.dispatch(new DeleteIngredient(this.editingIngredientIndex));
     this.onResetClick();
   }
 

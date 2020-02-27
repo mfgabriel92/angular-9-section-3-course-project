@@ -4,7 +4,6 @@ import { Subject } from 'rxjs';
 
 import { Recipe } from './recipe.model';
 import { Ingredient } from '../shared/ingredient.model';
-import { ShoppingListService } from '../shopping-list/shopping-list.service';
 
 import { AddIngredients } from '../shopping-list/store/shopping-list.actions';
 
@@ -14,7 +13,6 @@ export class RecipeService {
   recipes: Recipe[] = [];
 
   constructor(
-    private shoppingListService: ShoppingListService,
     public store: Store<{ shoppingList: { ingredients: Ingredient[] } }>
   ) {}
 
