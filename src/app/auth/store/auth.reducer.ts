@@ -14,7 +14,7 @@ export function authReducer(
   action: AuthActions.AuthActions
 ) {
   switch (action.type) {
-    case AuthActions.LOGIN:
+    case AuthActions.LOGIN_SUCCESS:
       const { id, email, token, expiresIn } = action.payload;
       const user = new User(id, email, token, expiresIn);
 
