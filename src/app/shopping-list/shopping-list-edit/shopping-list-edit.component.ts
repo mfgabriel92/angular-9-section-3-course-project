@@ -17,7 +17,6 @@ import * as fromShoppingList from '../store/shopping-list.reducer';
 export class ShoppingListEditComponent implements OnInit, OnDestroy {
   @ViewChild('f') ingredientForm: NgForm;
   isEditingIngredient = false;
-  editingIngredientIndex: number;
   editingIngredientItem: Ingredient;
 
   constructor(private store: Store<fromShoppingList.AppState>) {}
@@ -43,12 +42,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
     const ingredient = new Ingredient(name, amount);
 
     if (this.isEditingIngredient) {
-      this.store.dispatch(
-        new ShoppingListActions.UpdateIngredient({
-          index: this.editingIngredientIndex,
-          ingredient
-        })
-      );
+      this.store.dispatch(new ShoppingListActions.UpdateIngredient(ingredient));
     } else {
       this.store.dispatch(new ShoppingListActions.AddIngredient(ingredient));
     }
@@ -57,9 +51,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   }
 
   onDeleteClick(): void {
-    this.store.dispatch(
-      new ShoppingListActions.DeleteIngredient(this.editingIngredientIndex)
-    );
+    this.store.dispatch(new ShoppingListActions.DeleteIngredient());
     this.onResetClick();
   }
 
