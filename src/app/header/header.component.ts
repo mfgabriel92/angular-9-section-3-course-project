@@ -3,10 +3,9 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { RecipesApiService } from './../recipes/recipes-api.service';
-
 import * as fromApp from '../store/app.reducer';
 import * as AuthActions from '../auth/store/auth.actions';
+import * as RecipesActions from '../recipes/store/recipes.actions';
 
 @Component({
   selector: 'app-header',
@@ -17,10 +16,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private user: Subscription;
   isLogged: boolean;
 
-  constructor(
-    private recipeApi: RecipesApiService,
-    private store: Store<fromApp.AppState>
-  ) {}
+  constructor(private store: Store<fromApp.AppState>) {}
 
   ngOnInit(): void {
     this.user = this.store
@@ -40,7 +36,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onFetchClick(): void {
-    this.recipeApi.fetch().subscribe();
+    this.store.dispatch(new RecipesActions.FetchRecipes());
   }
 
   onLogoutClick(): void {
