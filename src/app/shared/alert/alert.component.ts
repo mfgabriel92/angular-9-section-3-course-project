@@ -1,4 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Store } from '@ngrx/store';
+
+import * as fromApp from 'src/app/store/app.reducer';
+import * as AuthActions from '../../auth/store/auth.actions';
 
 @Component({
   selector: 'app-alert',
@@ -8,11 +12,11 @@ import { Component, OnInit, Input } from '@angular/core';
 export class AlertComponent implements OnInit {
   @Input() message: string;
 
-  constructor() {}
+  constructor(private store: Store<fromApp.AppState>) {}
 
   ngOnInit(): void {}
 
   onOkClick(): void {
-    this.message = null;
+    this.store.dispatch(new AuthActions.ClearErrors());
   }
 }

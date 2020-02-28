@@ -59,8 +59,8 @@ export class AuthEffects {
   );
 
   @Effect({ dispatch: false })
-  loginSuccess = this.actions$.pipe(
-    ofType(AuthActions.AUTHENTICATION_SUCCESS),
+  redirect = this.actions$.pipe(
+    ofType(AuthActions.AUTHENTICATION_SUCCESS, AuthActions.LOGOUT),
     tap(() => this.router.navigate(['/']))
   );
 
@@ -89,6 +89,9 @@ const handleErrors = (message: string) => {
       break;
     case 'EMAIL_NOT_FOUND':
       errorMessage = 'The e-mail does not exist';
+      break;
+    case 'EMAIL_EXISTS':
+      errorMessage = 'The e-mail is already taken';
       break;
     default:
   }

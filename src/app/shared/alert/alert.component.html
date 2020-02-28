@@ -1,4 +1,4 @@
-<div class="backdrop" *ngIf="message">
+<div class="backdrop" *ngIf="message" (click)="onOkClick()">
   <div class="modal">
     <div class="modal-body">
       <p>{{ message }}</p>

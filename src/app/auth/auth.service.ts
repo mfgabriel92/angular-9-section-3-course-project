@@ -32,55 +32,55 @@ export class AuthService {
     private store: Store<fromApp.AppState>
   ) {}
 
-  signup(email: string, password: string): Observable<AuthResponse> {
-    return this.http
-      .post<AuthResponse>(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.APIkey}`,
-        {
-          email,
-          password,
-          returnSecureToken: true
-        }
-      )
-      .pipe(
-        catchError(({ error }) => {
-          switch (error.error.message) {
-            case 'EMAIL_EXISTS':
-              return throwError(
-                'The e-mail is already used by another account'
-              );
-            default:
-              return throwError('An unknown error occurred');
-          }
-        }),
-        tap(response => this.setUser(response))
-      );
-  }
+  // signup(email: string, password: string): Observable<AuthResponse> {
+  //   return this.http
+  //     .post<AuthResponse>(
+  //       `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.APIkey}`,
+  //       {
+  //         email,
+  //         password,
+  //         returnSecureToken: true
+  //       }
+  //     )
+  //     .pipe(
+  //       catchError(({ error }) => {
+  //         switch (error.error.message) {
+  //           case 'EMAIL_EXISTS':
+  //             return throwError(
+  //               'The e-mail is already used by another account'
+  //             );
+  //           default:
+  //             return throwError('An unknown error occurred');
+  //         }
+  //       }),
+  //       tap(response => this.setUser(response))
+  //     );
+  // }
 
-  login(email: string, password: string): Observable<AuthResponse> {
-    return this.http
-      .post<AuthResponse>(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.APIkey}`,
-        {
-          email,
-          password,
-          returnSecureToken: true
-        }
-      )
-      .pipe(
-        catchError(({ error }) => {
-          switch (error.error.message) {
-            case 'INVALID_PASSWORD':
-              return throwError('The credentials do not match');
-            case 'EMAIL_NOT_FOUND':
-              return throwError('The credentials do not match');
-            default:
-              return throwError('An unknown error occurred');
-          }
-        }),
-        tap(response => this.setUser(response))
-      );
-  }
+  // login(email: string, password: string): Observable<AuthResponse> {
+  //   return this.http
+  //     .post<AuthResponse>(
+  //       `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.APIkey}`,
+  //       {
+  //         email,
+  //         password,
+  //         returnSecureToken: true
+  //       }
+  //     )
+  //     .pipe(
+  //       catchError(({ error }) => {
+  //         switch (error.error.message) {
+  //           case 'INVALID_PASSWORD':
+  //             return throwError('The credentials do not match');
+  //           case 'EMAIL_NOT_FOUND':
+  //             return throwError('The credentials do not match');
+  //           default:
+  //             return throwError('An unknown error occurred');
+  //         }
+  //       }),
+  //       tap(response => this.setUser(response))
+  //     );
+  // }
 
   autoLogin(): void {
     const storedUser = JSON.parse(localStorage.getItem('user'));
@@ -115,36 +115,36 @@ export class AuthService {
     }
   }
 
-  logout(): void {
-    this.store.dispatch(new AuthActions.Logout());
-    this.router.navigate(['/signin']);
-    localStorage.removeItem('user');
+  // logout(): void {
+  //   this.store.dispatch(new AuthActions.Logout());
+  //   this.router.navigate(['/signin']);
+  //   localStorage.removeItem('user');
 
-    if (this.expirationTimer) {
-      clearTimeout(this.expirationTimer);
-    }
-  }
+  //   if (this.expirationTimer) {
+  //     clearTimeout(this.expirationTimer);
+  //   }
+  // }
 
   autoLogout(duration: number): void {
-    this.expirationTimer = setTimeout(() => this.logout(), duration);
+    // this.expirationTimer = setTimeout(() => this.logout(), duration);
   }
 
-  private setUser(response: AuthResponse): void {
-    const user = new User(
-      response.localId,
-      response.email,
-      response.idToken,
-      new Date(new Date().getTime() + +response.expiresIn * 1000)
-    );
+  // private setUser(response: AuthResponse): void {
+  //   const user = new User(
+  //     response.localId,
+  //     response.email,
+  //     response.idToken,
+  //     new Date(new Date().getTime() + +response.expiresIn * 1000)
+  //   );
 
-    this.store.dispatch(
-      new AuthActions.AuthenticationSuccess({
-        id: null,
-        email: response.email,
-        token: response.idToken,
-        expiresIn: new Date(new Date().getTime() + +response.expiresIn * 1000)
-      })
-    );
-    localStorage.setItem('user', JSON.stringify(user));
-  }
+  //   this.store.dispatch(
+  //     new AuthActions.AuthenticationSuccess({
+  //       id: null,
+  //       email: response.email,
+  //       token: response.idToken,
+  //       expiresIn: new Date(new Date().getTime() + +response.expiresIn * 1000)
+  //     })
+  //   );
+  //   localStorage.setItem('user', JSON.stringify(user));
+  // }
 }

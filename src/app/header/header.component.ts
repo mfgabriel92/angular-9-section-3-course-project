@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { RecipesApiService } from './../recipes/recipes-api.service';
-import { AuthService } from '../auth/auth.service';
-import { Subscription } from 'rxjs';
 
 import * as fromApp from '../store/app.reducer';
-import { map } from 'rxjs/operators';
+import * as AuthActions from '../auth/store/auth.actions';
 
 @Component({
   selector: 'app-header',
@@ -19,7 +19,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private recipeApi: RecipesApiService,
-    private authService: AuthService,
     private store: Store<fromApp.AppState>
   ) {}
 
@@ -45,6 +44,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onLogoutClick(): void {
-    this.authService.logout();
+    this.store.dispatch(new AuthActions.Logout());
   }
 }
