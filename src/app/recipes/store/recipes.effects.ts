@@ -1,12 +1,14 @@
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { switchMap, map } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Store } from '@ngrx/store';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import { switchMap, map, withLatestFrom } from 'rxjs/operators';
 
 import { Recipe } from '../recipe.model';
 import { environment } from 'src/environments/environment';
 
 import * as RecipesActions from './recipes.actions';
-import { Injectable } from '@angular/core';
+import * as fromApp from 'src/app/store/app.reducer';
 
 @Injectable()
 export class RecipesEffects {
@@ -24,5 +26,21 @@ export class RecipesEffects {
     map(recipes => new RecipesActions.SetRecipes(recipes))
   );
 
-  constructor(private actions$: Actions, private http: HttpClient) {}
+  @Effect({ dispatch: false })
+  save = this.actions$.pipe(
+    ofType(RecipesActions.STORE_RECIPES),
+    withLatestFrom(this.store.select('recipes')),
+    switchMap(([_, store]) => {
+      return this.http.put<Recipe[]>(
+        `${environment.baseUrl}/recipes.json`,
+        store.recipes
+      );
+    })
+  );
+
+  constructor(
+    private actions$: Actions,
+    private http: HttpClient,
+    private store: Store<fromApp.AppState>
+  ) {}
 }

@@ -32,7 +32,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onSaveClick(): void {
-    // this.recipeApi.store().subscribe(response => console.log(response));
+    this.store.dispatch(new RecipesActions.StoreRecipes());
   }
 
   onFetchClick(): void {
