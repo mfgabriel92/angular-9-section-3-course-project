@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 
 import { map, tap } from 'rxjs/operators';
 import { Recipe } from './recipe.model';
-import { RecipeService } from './recipes.service';
 import { environment } from 'src/environments/environment';
 import { Store } from '@ngrx/store';
 
@@ -15,7 +14,6 @@ import * as RecipesActions from './store/recipes.actions';
 export class RecipesApiService {
   constructor(
     private http: HttpClient,
-    private recipeService: RecipeService,
     private store: Store<fromApp.AppState>
   ) {}
 
@@ -31,10 +29,4 @@ export class RecipesApiService {
       )
     );
   }
-
-  // store(): Observable<object> {
-  //   const recipes = this.recipeService.getRecipes();
-
-  //   return this.http.put(`${environment.baseUrl}/recipes.json`, recipes);
-  // }
 }
