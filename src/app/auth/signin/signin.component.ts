@@ -13,20 +13,22 @@ import * as AuthActions from '../store/auth.actions';
 })
 export class SigninComponent implements OnInit {
   @ViewChild('form') signupForm: NgForm;
-  isLoading = false;
+  loading: boolean;
   error: string;
 
   constructor(private store: Store<fromApp.AppState>, private router: Router) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.store.select('auth').subscribe(state => {
+      this.loading = state.loading;
+      this.error = state.error;
+    });
+  }
 
   onSubmitClick(): void {
     if (!this.signupForm.valid) {
       return;
     }
-
-    this.isLoading = true;
-    this.error = null;
 
     const { email, password } = this.signupForm.value;
 
