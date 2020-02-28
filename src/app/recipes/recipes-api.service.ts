@@ -6,10 +6,18 @@ import { map, tap } from 'rxjs/operators';
 import { Recipe } from './recipe.model';
 import { RecipeService } from './recipes.service';
 import { environment } from 'src/environments/environment';
+import { Store } from '@ngrx/store';
+
+import * as fromApp from '../store/app.reducer';
+import * as RecipesActions from './store/recipes.actions';
 
 @Injectable({ providedIn: 'root' })
 export class RecipesApiService {
-  constructor(private http: HttpClient, private recipeService: RecipeService) {}
+  constructor(
+    private http: HttpClient,
+    private recipeService: RecipeService,
+    private store: Store<fromApp.AppState>
+  ) {}
 
   fetch(): Observable<Recipe[]> {
     return this.http.get<Recipe[]>(`${environment.baseUrl}/recipes.json`).pipe(
@@ -18,13 +26,15 @@ export class RecipesApiService {
           return { ...recipes, ingredients: recipes.ingredients ?? [] };
         });
       }),
-      tap(recipes => this.recipeService.setRecipes(recipes))
+      tap(recipes =>
+        this.store.dispatch(new RecipesActions.SetRecipes(recipes))
+      )
     );
   }
 
-  store(): Observable<object> {
-    const recipes = this.recipeService.getRecipes();
+  // store(): Observable<object> {
+  //   const recipes = this.recipeService.getRecipes();
 
-    return this.http.put(`${environment.baseUrl}/recipes.json`, recipes);
-  }
+  //   return this.http.put(`${environment.baseUrl}/recipes.json`, recipes);
+  // }
 }

@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onSaveClick(): void {
-    this.recipeApi.store().subscribe(response => console.log(response));
+    // this.recipeApi.store().subscribe(response => console.log(response));
   }
 
   onFetchClick(): void {
