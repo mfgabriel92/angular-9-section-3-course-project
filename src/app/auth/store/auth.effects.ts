@@ -8,6 +8,7 @@ import { switchMap, catchError, map, tap } from 'rxjs/operators';
 import * as AuthActions from './auth.actions';
 import { environment } from 'src/environments/environment';
 import { User } from '../user.model';
+import { AuthService } from '../auth.service';
 
 interface AuthResponse {
   kind: string;
@@ -34,6 +35,9 @@ export class AuthEffects {
           }
         )
         .pipe(
+          tap(response =>
+            this.authService.initLogoutTimer(+response.expiresIn)
+          ),
           map(response => handleAuthentication(response)),
           catchError(({ error }) => handleErrors(error.error.message))
         );
@@ -53,6 +57,9 @@ export class AuthEffects {
           }
         )
         .pipe(
+          tap(response =>
+            this.authService.initLogoutTimer(+response.expiresIn)
+          ),
           map(response => handleAuthentication(response)),
           catchError(({ error }) => handleErrors(error.error.message))
         );
@@ -77,6 +84,10 @@ export class AuthEffects {
       );
 
       if (user.userToken) {
+        const expiresIn = new Date(storedUser.expiresIn).getTime();
+        const now = new Date().getTime();
+        this.authService.initLogoutTimer(expiresIn - now / 1000);
+
         return new AuthActions.AuthenticationSuccess({ ...storedUser });
       }
 
@@ -87,19 +98,24 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   logout = this.actions$.pipe(
     ofType(AuthActions.LOGOUT),
-    tap(() => localStorage.removeItem('user'))
+    tap(() => {
+      this.authService.clearLogoutTimer();
+      this.router.navigate(['/signin']);
+      localStorage.removeItem('user');
+    })
   );
 
   @Effect({ dispatch: false })
   redirect = this.actions$.pipe(
-    ofType(AuthActions.AUTHENTICATION_SUCCESS, AuthActions.LOGOUT),
+    ofType(AuthActions.AUTHENTICATION_SUCCESS),
     tap(() => this.router.navigate(['/']))
   );
 
   constructor(
     private actions$: Actions,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 }
 
