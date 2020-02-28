@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import * as fromApp from 'src/app/store/app.reducer';
@@ -16,7 +15,7 @@ export class SigninComponent implements OnInit {
   loading: boolean;
   error: string;
 
-  constructor(private store: Store<fromApp.AppState>, private router: Router) {}
+  constructor(private store: Store<fromApp.AppState>) {}
 
   ngOnInit(): void {
     this.store.select('auth').subscribe(state => {

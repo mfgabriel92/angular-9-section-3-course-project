@@ -21,47 +21,39 @@ interface AuthResponse {
 @Injectable()
 export class AuthEffects {
   @Effect()
-  signupRequest = this.actions$.pipe(ofType(AuthActions.SIGNUP_REQUEST));
-
-  @Effect()
-  loginRequest = this.actions$.pipe(
-    ofType(AuthActions.LOGIN_REQUEST),
-    switchMap((authData: AuthActions.LoginRequest) => {
+  signupRequest = this.actions$.pipe(
+    ofType(AuthActions.SIGNUP_REQUEST),
+    switchMap((action: AuthActions.SignupRequest) => {
       return this.http
         .post<AuthResponse>(
-          `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.APIkey}`,
+          `${environment.baseAuthUrl}:signUp?key=${environment.APIkey}`,
           {
-            ...authData.payload,
+            ...action.payload,
             returnSecureToken: true
           }
         )
         .pipe(
-          map(
-            response =>
-              new AuthActions.AuthenticationSuccess({
-                id: null,
-                email: response.email,
-                token: response.idToken,
-                expiresIn: new Date(
-                  new Date().getTime() + +response.expiresIn * 1000
-                )
-              })
-          ),
-          catchError(({ error }) => {
-            let message = 'An unknown error happened';
+          map(response => handleAuthentication(response)),
+          catchError(({ error }) => handleErrors(error.error.message))
+        );
+    })
+  );
 
-            switch (error.error.message) {
-              case 'INVALID_PASSWORD':
-                message = 'The credentials do not match';
-                break;
-              case 'EMAIL_NOT_FOUND':
-                message = 'The e-mail does not exist';
-                break;
-              default:
-            }
-
-            return of(new AuthActions.AuthenticationFailure(message));
-          })
+  @Effect()
+  loginRequest = this.actions$.pipe(
+    ofType(AuthActions.LOGIN_REQUEST),
+    switchMap((action: AuthActions.LoginRequest) => {
+      return this.http
+        .post<AuthResponse>(
+          `${environment.baseAuthUrl}:signInWithPassword?key=${environment.APIkey}`,
+          {
+            ...action.payload,
+            returnSecureToken: true
+          }
+        )
+        .pipe(
+          map(response => handleAuthentication(response)),
+          catchError(({ error }) => handleErrors(error.error.message))
         );
     })
   );
@@ -78,3 +70,28 @@ export class AuthEffects {
     private router: Router
   ) {}
 }
+
+const handleAuthentication = (response: AuthResponse) => {
+  return new AuthActions.AuthenticationSuccess({
+    id: null,
+    email: response.email,
+    token: response.idToken,
+    expiresIn: new Date(new Date().getTime() + +response.expiresIn * 1000)
+  });
+};
+
+const handleErrors = (message: string) => {
+  let errorMessage = 'An unknown error happened';
+
+  switch (message) {
+    case 'INVALID_PASSWORD':
+      errorMessage = 'The credentials do not match';
+      break;
+    case 'EMAIL_NOT_FOUND':
+      errorMessage = 'The e-mail does not exist';
+      break;
+    default:
+  }
+
+  return of(new AuthActions.AuthenticationFailure(errorMessage));
+};

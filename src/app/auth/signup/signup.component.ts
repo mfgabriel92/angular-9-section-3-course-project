@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 
-import { AuthService } from 'src/app/auth/auth.service';
+import * as fromApp from 'src/app/store/app.reducer';
+import * as AuthActions from '../store/auth.actions';
 
 @Component({
   selector: 'app-signup',
@@ -11,12 +12,17 @@ import { AuthService } from 'src/app/auth/auth.service';
 })
 export class SignupComponent implements OnInit {
   @ViewChild('form') signupForm: NgForm;
-  isLoading = false;
+  loading: boolean;
   error: string;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private store: Store<fromApp.AppState>) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.store.select('auth').subscribe(state => {
+      this.loading = state.loading;
+      this.error = state.error;
+    });
+  }
 
   onSubmitClick(): void {
     if (!this.signupForm.valid) {
@@ -25,18 +31,7 @@ export class SignupComponent implements OnInit {
 
     const { email, password } = this.signupForm.value;
 
-    this.isLoading = true;
-    this.error = null;
-    this.authService.signup(email, password).subscribe(
-      () => {
-        this.router.navigate(['/recipes']);
-        this.isLoading = false;
-      },
-      error => {
-        this.error = error;
-        this.isLoading = false;
-      }
-    );
+    this.store.dispatch(new AuthActions.SignupRequest({ email, password }));
     this.signupForm.reset();
   }
 }
