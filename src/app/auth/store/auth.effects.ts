@@ -5,10 +5,11 @@ import { Actions, ofType, Effect } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { switchMap, catchError, map, tap } from 'rxjs/operators';
 
-import * as AuthActions from './auth.actions';
 import { environment } from 'src/environments/environment';
 import { User } from '../user.model';
 import { AuthService } from '../auth.service';
+
+import * as AuthActions from './auth.actions';
 
 interface AuthResponse {
   kind: string;
@@ -36,7 +37,7 @@ export class AuthEffects {
         )
         .pipe(
           tap(response =>
-            this.authService.initLogoutTimer(+response.expiresIn)
+            this.authService.initLogoutTimer(+response.expiresIn * 1000)
           ),
           map(response => handleAuthentication(response)),
           catchError(({ error }) => handleErrors(error.error.message))
@@ -58,7 +59,7 @@ export class AuthEffects {
         )
         .pipe(
           tap(response =>
-            this.authService.initLogoutTimer(+response.expiresIn)
+            this.authService.initLogoutTimer(+response.expiresIn * 1000)
           ),
           map(response => handleAuthentication(response)),
           catchError(({ error }) => handleErrors(error.error.message))
@@ -86,7 +87,7 @@ export class AuthEffects {
       if (user.userToken) {
         const expiresIn = new Date(storedUser.expiresIn).getTime();
         const now = new Date().getTime();
-        this.authService.initLogoutTimer(expiresIn - now / 1000);
+        this.authService.initLogoutTimer(expiresIn - now);
 
         return new AuthActions.AuthenticationSuccess({ ...storedUser });
       }
