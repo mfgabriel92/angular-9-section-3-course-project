@@ -24,7 +24,7 @@ export function authReducer(
         error: null,
         loading: true
       };
-    case AuthActions.LOGIN_SUCCESS:
+    case AuthActions.AUTHENTICATION_SUCCESS:
       const { id, email, token, expiresIn } = action.payload;
       const user = new User(id, email, token, expiresIn);
 
@@ -34,7 +34,7 @@ export function authReducer(
         error: null,
         loading: false
       };
-    case AuthActions.LOGIN_FAILURE:
+    case AuthActions.AUTHENTICATION_FAILURE:
       return {
         ...state,
         error: action.payload,

@@ -21,6 +21,9 @@ interface AuthResponse {
 @Injectable()
 export class AuthEffects {
   @Effect()
+  signupRequest = this.actions$.pipe(ofType(AuthActions.SIGNUP_REQUEST));
+
+  @Effect()
   loginRequest = this.actions$.pipe(
     ofType(AuthActions.LOGIN_REQUEST),
     switchMap((authData: AuthActions.LoginRequest) => {
@@ -35,7 +38,7 @@ export class AuthEffects {
         .pipe(
           map(
             response =>
-              new AuthActions.LoginSuccess({
+              new AuthActions.AuthenticationSuccess({
                 id: null,
                 email: response.email,
                 token: response.idToken,
@@ -57,7 +60,7 @@ export class AuthEffects {
               default:
             }
 
-            return of(new AuthActions.LoginFailure(message));
+            return of(new AuthActions.AuthenticationFailure(message));
           })
         );
     })
@@ -65,7 +68,7 @@ export class AuthEffects {
 
   @Effect({ dispatch: false })
   loginSuccess = this.actions$.pipe(
-    ofType(AuthActions.LOGIN_SUCCESS),
+    ofType(AuthActions.AUTHENTICATION_SUCCESS),
     tap(() => this.router.navigate(['/']))
   );
 

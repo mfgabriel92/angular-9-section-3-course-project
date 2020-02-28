@@ -98,7 +98,7 @@ export class AuthService {
 
     if (user.userToken) {
       this.store.dispatch(
-        new AuthActions.LoginSuccess({
+        new AuthActions.AuthenticationSuccess({
           id: storedUser.id,
           email: storedUser.email,
           token: storedUser.token,
@@ -138,7 +138,7 @@ export class AuthService {
     );
 
     this.store.dispatch(
-      new AuthActions.LoginSuccess({
+      new AuthActions.AuthenticationSuccess({
         id: null,
         email: response.email,
         token: response.idToken,
