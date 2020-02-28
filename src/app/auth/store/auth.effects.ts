@@ -1,11 +1,12 @@
-import { Actions, ofType, Effect } from '@ngrx/effects';
-import { switchMap, catchError, map } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { Actions, ofType, Effect } from '@ngrx/effects';
+import { of } from 'rxjs';
+import { switchMap, catchError, map, tap } from 'rxjs/operators';
 
 import * as AuthActions from './auth.actions';
 import { environment } from 'src/environments/environment';
-import { of } from 'rxjs';
-import { Injectable } from '@angular/core';
 
 interface AuthResponse {
   kind: string;
@@ -20,7 +21,7 @@ interface AuthResponse {
 @Injectable()
 export class AuthEffects {
   @Effect()
-  login = this.actions$.pipe(
+  loginRequest = this.actions$.pipe(
     ofType(AuthActions.LOGIN_REQUEST),
     switchMap((authData: AuthActions.LoginRequest) => {
       return this.http
@@ -32,8 +33,8 @@ export class AuthEffects {
           }
         )
         .pipe(
-          map(response => {
-            return of(
+          map(
+            response =>
               new AuthActions.LoginSuccess({
                 id: null,
                 email: response.email,
@@ -42,12 +43,35 @@ export class AuthEffects {
                   new Date().getTime() + +response.expiresIn * 1000
                 )
               })
-            );
-          }),
-          catchError(error => of())
+          ),
+          catchError(({ error }) => {
+            let message = 'An unknown error happened';
+
+            switch (error.error.message) {
+              case 'INVALID_PASSWORD':
+                message = 'The credentials do not match';
+                break;
+              case 'EMAIL_NOT_FOUND':
+                message = 'The e-mail does not exist';
+                break;
+              default:
+            }
+
+            return of(new AuthActions.LoginFailure(message));
+          })
         );
     })
   );
 
-  constructor(private actions$: Actions, private http: HttpClient) {}
+  @Effect({ dispatch: false })
+  loginSuccess = this.actions$.pipe(
+    ofType(AuthActions.LOGIN_SUCCESS),
+    tap(() => this.router.navigate(['/']))
+  );
+
+  constructor(
+    private actions$: Actions,
+    private http: HttpClient,
+    private router: Router
+  ) {}
 }
