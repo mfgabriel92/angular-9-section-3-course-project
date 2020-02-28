@@ -7,6 +7,7 @@ import { switchMap, catchError, map, tap } from 'rxjs/operators';
 
 import * as AuthActions from './auth.actions';
 import { environment } from 'src/environments/environment';
+import { User } from '../user.model';
 
 interface AuthResponse {
   kind: string;
@@ -58,6 +59,37 @@ export class AuthEffects {
     })
   );
 
+  @Effect()
+  autoLogin = this.actions$.pipe(
+    ofType(AuthActions.AUTO_LOGIN),
+    map(() => {
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+
+      if (!storedUser) {
+        return { type: '[Auth] Unauthenticated' };
+      }
+
+      const user = new User(
+        storedUser.id,
+        storedUser.email,
+        storedUser.token,
+        new Date(storedUser.expiresIn)
+      );
+
+      if (user.userToken) {
+        return new AuthActions.AuthenticationSuccess({ ...storedUser });
+      }
+
+      return { type: '[Auth] Unauthenticated' };
+    })
+  );
+
+  @Effect({ dispatch: false })
+  logout = this.actions$.pipe(
+    ofType(AuthActions.LOGOUT),
+    tap(() => localStorage.removeItem('user'))
+  );
+
   @Effect({ dispatch: false })
   redirect = this.actions$.pipe(
     ofType(AuthActions.AUTHENTICATION_SUCCESS, AuthActions.LOGOUT),
@@ -72,12 +104,15 @@ export class AuthEffects {
 }
 
 const handleAuthentication = (response: AuthResponse) => {
-  return new AuthActions.AuthenticationSuccess({
-    id: null,
-    email: response.email,
-    token: response.idToken,
-    expiresIn: new Date(new Date().getTime() + +response.expiresIn * 1000)
-  });
+  const user = new User(
+    response.localId,
+    response.email,
+    response.idToken,
+    new Date(new Date().getTime() + +response.expiresIn * 1000)
+  );
+
+  localStorage.setItem('user', JSON.stringify(user));
+  return new AuthActions.AuthenticationSuccess(user);
 };
 
 const handleErrors = (message: string) => {
