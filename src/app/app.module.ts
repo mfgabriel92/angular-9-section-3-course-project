@@ -4,7 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { StoreRouterConnectingModule } from '@ngrx/router-store';
 
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core.module';
@@ -31,7 +30,6 @@ import * as fromAppEffects from './store/app.effects';
     StoreDevtoolsModule.instrument({
       logOnly: environment.production
     }),
-    StoreRouterConnectingModule.forRoot(),
 
     AuthModule
   ],

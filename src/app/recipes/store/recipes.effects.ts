@@ -14,17 +14,14 @@ export class RecipesEffects {
   fetch = this.actions$.pipe(
     ofType(RecipesActions.FETCH_RECIPES),
     switchMap(() => {
-      return this.http
-        .get<Recipe[]>(`${environment.baseUrl}/recipes.json`)
-        .pipe(
-          map(recipes => {
-            return recipes.map(recipe => {
-              return { ...recipe, ingredients: recipe.ingredients ?? [] };
-            });
-          }),
-          map(recipes => new RecipesActions.SetRecipes(recipes))
-        );
-    })
+      return this.http.get<Recipe[]>(`${environment.baseUrl}/recipes.json`);
+    }),
+    map(recipes => {
+      return recipes.map(recipe => {
+        return { ...recipe, ingredients: recipe.ingredients ?? [] };
+      });
+    }),
+    map(recipes => new RecipesActions.SetRecipes(recipes))
   );
 
   constructor(private actions$: Actions, private http: HttpClient) {}
