@@ -4,7 +4,13 @@ export const LOGIN_REQUEST = '[Auth] Login Request';
 export const LOGIN_SUCCESS = '[Auth] Login Success';
 export const LOGOUT = '[Auth] Logout';
 
-export class Login implements Action {
+export class LoginRequest implements Action {
+  readonly type = LOGIN_REQUEST;
+
+  constructor(public payload: { email: string; password: string }) {}
+}
+
+export class LoginSuccess implements Action {
   readonly type = LOGIN_SUCCESS;
 
   constructor(
@@ -21,4 +27,4 @@ export class Logout implements Action {
   readonly type = LOGOUT;
 }
 
-export type AuthActions = Login | Logout;
+export type AuthActions = LoginSuccess | Logout;
