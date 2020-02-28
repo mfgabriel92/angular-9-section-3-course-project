@@ -1,7 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/auth/auth.service';
+import { Store } from '@ngrx/store';
+
+import * as fromApp from 'src/app/store/app.reducer';
+import * as AuthActions from '../store/auth.actions';
 
 @Component({
   selector: 'app-signin',
@@ -13,7 +16,7 @@ export class SigninComponent implements OnInit {
   isLoading = false;
   error: string;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private store: Store<fromApp.AppState>, private router: Router) {}
 
   ngOnInit(): void {}
 
@@ -22,20 +25,12 @@ export class SigninComponent implements OnInit {
       return;
     }
 
-    const { email, password } = this.signupForm.value;
-
     this.isLoading = true;
     this.error = null;
-    this.authService.login(email, password).subscribe(
-      () => {
-        this.router.navigate(['/recipes']);
-        this.isLoading = false;
-      },
-      error => {
-        this.error = error;
-        this.isLoading = false;
-      }
-    );
+
+    const { email, password } = this.signupForm.value;
+
+    this.store.dispatch(new AuthActions.LoginRequest({ email, password }));
     this.signupForm.reset();
   }
 }

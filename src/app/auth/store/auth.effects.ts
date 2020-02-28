@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import * as AuthActions from './auth.actions';
 import { environment } from 'src/environments/environment';
 import { of } from 'rxjs';
+import { Injectable } from '@angular/core';
 
 interface AuthResponse {
   kind: string;
@@ -16,8 +17,10 @@ interface AuthResponse {
   registered?: boolean;
 }
 
+@Injectable()
 export class AuthEffects {
-  @Effect() login = this.actions$.pipe(
+  @Effect()
+  login = this.actions$.pipe(
     ofType(AuthActions.LOGIN_REQUEST),
     switchMap((authData: AuthActions.LoginRequest) => {
       return this.http
@@ -29,8 +32,19 @@ export class AuthEffects {
           }
         )
         .pipe(
-          catchError(error => of()),
-          map(response => of())
+          map(response => {
+            return of(
+              new AuthActions.LoginSuccess({
+                id: null,
+                email: response.email,
+                token: response.idToken,
+                expiresIn: new Date(
+                  new Date().getTime() + +response.expiresIn * 1000
+                )
+              })
+            );
+          }),
+          catchError(error => of())
         );
     })
   );
