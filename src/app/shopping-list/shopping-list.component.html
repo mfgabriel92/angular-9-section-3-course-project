@@ -11,6 +11,7 @@
           let i = index
         "
         (click)="onItemClick(i)"
+        [@list]="state"
       >
         {{ ingredient.name }} ({{ ingredient.amount }})
       </a>
