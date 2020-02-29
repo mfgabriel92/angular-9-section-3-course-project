@@ -1,7 +1,7 @@
+import { Actions, createEffect, ofType, Effect } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Actions, ofType, Effect } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { switchMap, catchError, map, tap } from 'rxjs/operators';
 
@@ -23,93 +23,107 @@ interface AuthResponse {
 
 @Injectable()
 export class AuthEffects {
-  @Effect()
-  signupRequest = this.actions$.pipe(
-    ofType(AuthActions.SIGNUP_REQUEST),
-    switchMap((action: AuthActions.SignupRequest) => {
-      return this.http
-        .post<AuthResponse>(
-          `${environment.baseAuthUrl}:signUp?key=${environment.APIkey}`,
-          {
-            ...action.payload,
-            returnSecureToken: true
-          }
-        )
-        .pipe(
-          tap(response =>
-            this.authService.initLogoutTimer(+response.expiresIn * 1000)
-          ),
-          map(response => handleAuthentication(response)),
-          catchError(({ error }) => handleErrors(error.error.message))
-        );
-    })
+  signupRequest$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.signupRequest),
+      switchMap(action => {
+        return this.http
+          .post<AuthResponse>(
+            `${environment.baseAuthUrl}:signUp?key=${environment.APIkey}`,
+            {
+              email: action.email,
+              password: action.password,
+              returnSecureToken: true
+            }
+          )
+          .pipe(
+            tap(response =>
+              this.authService.initLogoutTimer(+response.expiresIn * 1000)
+            ),
+            map(response => handleAuthentication(response)),
+            catchError(({ error }) => handleErrors(error.error.message))
+          );
+      })
+    )
   );
 
-  @Effect()
-  loginRequest = this.actions$.pipe(
-    ofType(AuthActions.LOGIN_REQUEST),
-    switchMap((action: AuthActions.LoginRequest) => {
-      return this.http
-        .post<AuthResponse>(
-          `${environment.baseAuthUrl}:signInWithPassword?key=${environment.APIkey}`,
-          {
-            ...action.payload,
-            returnSecureToken: true
-          }
-        )
-        .pipe(
-          tap(response =>
-            this.authService.initLogoutTimer(+response.expiresIn * 1000)
-          ),
-          map(response => handleAuthentication(response)),
-          catchError(({ error }) => handleErrors(error.error.message))
-        );
-    })
+  loginRequest = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.loginRequest),
+      switchMap(action => {
+        return this.http
+          .post<AuthResponse>(
+            `${environment.baseAuthUrl}:signInWithPassword?key=${environment.APIkey}`,
+            {
+              email: action.email,
+              password: action.password,
+              returnSecureToken: true
+            }
+          )
+          .pipe(
+            tap(response =>
+              this.authService.initLogoutTimer(+response.expiresIn * 1000)
+            ),
+            map(response => handleAuthentication(response)),
+            catchError(({ error }) => handleErrors(error.error.message))
+          );
+      })
+    )
   );
 
-  @Effect()
-  autoLogin = this.actions$.pipe(
-    ofType(AuthActions.AUTO_LOGIN),
-    map(() => {
-      const storedUser = JSON.parse(localStorage.getItem('user'));
+  autoLogin = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.autoLogin),
+      map(() => {
+        const storedUser = JSON.parse(localStorage.getItem('user'));
 
-      if (!storedUser) {
+        if (!storedUser) {
+          return { type: '[Auth] Unauthenticated' };
+        }
+
+        const user = new User(
+          storedUser.id,
+          storedUser.email,
+          storedUser.token,
+          new Date(storedUser.expiresIn)
+        );
+
+        if (user.userToken) {
+          const expiresIn = new Date(storedUser.expiresIn).getTime();
+          const now = new Date().getTime();
+          this.authService.initLogoutTimer(expiresIn - now);
+
+          return AuthActions.authenticationSuccess({
+            user: storedUser,
+            redirect: false
+          });
+        }
+
         return { type: '[Auth] Unauthenticated' };
-      }
-
-      const user = new User(
-        storedUser.id,
-        storedUser.email,
-        storedUser.token,
-        new Date(storedUser.expiresIn)
-      );
-
-      if (user.userToken) {
-        const expiresIn = new Date(storedUser.expiresIn).getTime();
-        const now = new Date().getTime();
-        this.authService.initLogoutTimer(expiresIn - now);
-
-        return new AuthActions.AuthenticationSuccess({ ...storedUser });
-      }
-
-      return { type: '[Auth] Unauthenticated' };
-    })
+      })
+    )
   );
 
-  @Effect({ dispatch: false })
-  logout = this.actions$.pipe(
-    ofType(AuthActions.LOGOUT),
-    tap(() => {
-      this.authService.clearLogoutTimer();
-      this.router.navigate(['/signin']);
-      localStorage.removeItem('user');
-    })
+  logout = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.logout),
+        tap(() => {
+          this.authService.clearLogoutTimer();
+          this.router.navigate(['/signin']);
+          localStorage.removeItem('user');
+        })
+      ),
+    { dispatch: false }
   );
 
-  @Effect({ dispatch: false })
-  redirect = this.actions$.pipe(
-    ofType(AuthActions.AUTHENTICATION_SUCCESS),
-    tap(() => this.router.navigate(['/']))
+  redirect = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.authenticationSuccess),
+        tap(action => action.redirect && this.router.navigate(['/']))
+      ),
+    { dispatch: false }
   );
 
   constructor(
@@ -129,7 +143,8 @@ const handleAuthentication = (response: AuthResponse) => {
   );
 
   localStorage.setItem('user', JSON.stringify(user));
-  return new AuthActions.AuthenticationSuccess(user);
+
+  return AuthActions.authenticationSuccess({ user, redirect: true });
 };
 
 const handleErrors = (message: string) => {
@@ -148,5 +163,5 @@ const handleErrors = (message: string) => {
     default:
   }
 
-  return of(new AuthActions.AuthenticationFailure(errorMessage));
+  return of(AuthActions.authenticationFailure({ message: errorMessage }));
 };

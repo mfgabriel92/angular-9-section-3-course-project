@@ -32,14 +32,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onSaveClick(): void {
-    this.store.dispatch(new RecipesActions.StoreRecipes());
+    this.store.dispatch(RecipesActions.storeRecipes());
   }
 
   onFetchClick(): void {
-    this.store.dispatch(new RecipesActions.FetchRecipes());
+    this.store.dispatch(RecipesActions.fetchRecipes());
   }
 
   onLogoutClick(): void {
-    this.store.dispatch(new AuthActions.Logout());
+    this.store.dispatch(AuthActions.logout());
   }
 }

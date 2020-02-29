@@ -66,7 +66,7 @@ export class RecipesEditComponent implements OnInit, OnDestroy {
   onSubmitClick(): void {
     if (this.isEditing) {
       this.store.dispatch(
-        new RecipesActions.UpdateRecipe({
+        RecipesActions.updateRecipe({
           id: this.id,
           recipe: this.recipeForm.value
         })
@@ -85,7 +85,7 @@ export class RecipesEditComponent implements OnInit, OnDestroy {
         imageUrl,
         ingredients
       );
-      this.store.dispatch(new RecipesActions.AddRecipe(recipe));
+      this.store.dispatch(RecipesActions.addRecipe({ recipe }));
     }
 
     this.clearAndLeave();
@@ -96,7 +96,7 @@ export class RecipesEditComponent implements OnInit, OnDestroy {
   }
 
   onDeleteClick(): void {
-    this.store.dispatch(new RecipesActions.DeleteRecipe(this.id));
+    this.store.dispatch(RecipesActions.deleteRecipe({ id: this.id }));
   }
 
   onDeleteIngredientClick(index: number) {
